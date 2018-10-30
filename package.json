@@ -1,0 +1,41 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for Supro App",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "Backend",
+    "API",
+    "Node.js",
+    "Restify",
+    "Mongo",
+    "DB"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pandusatria/SuProAPI.git"
+  },
+  "author": "Pandu Satria",
+  "license": "MIT",
+  "dependencies": {
+    "app-root-path": "^2.1.0",
+    "bcryptjs": "^2.4.3",
+    "bunyan": "^1.8.12",
+    "jsonwebtoken": "^8.3.0",
+    "moment": "^2.22.2",
+    "mongodb": "^3.1.8",
+    "restify": "^7.2.1",
+    "restify-cors-middleware": "^1.1.1",
+    "winston": "^3.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.5"
+  },
+  "bugs": {
+    "url": "https://github.com/pandusatria/SuProAPI/issues"
+  },
+  "homepage": "https://github.com/pandusatria/SuProAPI#readme"
+}

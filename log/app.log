@@ -1,0 +1,7 @@
+{"name":"SuproApp Logging System","hostname":"ASUS-UX360UAK","pid":9900,"time":"Tue Oct 30 2018 10:16:56 GMT+0700 (Western Indonesia Time)","level":"info","message":"Initializing Connect to MongoDB at 30/10/2018, 10:16:56 am"}
+{"name":"SuproApp Logging System","hostname":"ASUS-UX360UAK","pid":9900,"time":"Tue Oct 30 2018 10:16:57 GMT+0700 (Western Indonesia Time)","level":"info","message":"[DATABASE]mongodb://localhost:27017/db_supro connected"}
+{"name":"SuproApp Logging System","hostname":"ASUS-UX360UAK","pid":9900,"time":"Tue Oct 30 2018 10:16:57 GMT+0700 (Western Indonesia Time)","level":"info","message":"Get Connection to Database at 30/10/2018, 10:16:57 am"}
+{"name":"SuproApp Logging System","hostname":"ASUS-UX360UAK","pid":9900,"time":"Tue Oct 30 2018 10:16:57 GMT+0700 (Western Indonesia Time)","level":"info","message":"Initializing Route Path at 30/10/2018, 10:16:57 am"}
+{"name":"SuproApp Logging System","hostname":"ASUS-UX360UAK","pid":9900,"time":"Tue Oct 30 2018 10:16:57 GMT+0700 (Western Indonesia Time)","level":"info","message":"Restify Cors Middleware already set at 30/10/2018, 10:16:57 am"}
+{"name":"SuproApp Logging System","hostname":"ASUS-UX360UAK","pid":9900,"time":"Tue Oct 30 2018 10:16:57 GMT+0700 (Western Indonesia Time)","level":"info","message":"Route already accessed at 30/10/2018, 10:16:57 am"}
+{"name":"SuproApp Logging System","hostname":"ASUS-UX360UAK","pid":9900,"time":"Tue Oct 30 2018 10:16:57 GMT+0700 (Western Indonesia Time)","level":"info","message":"Supro API call http://[::]:8000 at 30/10/2018, 10:16:57 am"}
