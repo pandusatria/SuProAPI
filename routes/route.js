@@ -32,5 +32,6 @@ module.exports = exports = function(server){
     server.get('/api/supplier/', Middleware.checkToken, SupplierController.GetAllHandler);
 
     // Product
-    server.post('/api/product/', Middleware.checkToken, ProductController.GetAllHandler);
+    server.get('/api/product/', Middleware.checkToken, ProductController.GetAllHandler);
+    server.get('/api/product/bysupplier/:id', Middleware.checkToken, ProductController.GetAllBySupplierIDHandler);
 };
