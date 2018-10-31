@@ -64,7 +64,7 @@ const ProductController = {
     GetAllBySupplierIDHandler : (req, res, next) => {
         logger.info("Initialized Product : GetAllBySupplierIDHandler" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
         let id = req.params.id;
-        
+
         global.dbo.collection('Products').aggregate([
             {
                 $lookup:

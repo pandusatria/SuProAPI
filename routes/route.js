@@ -30,6 +30,7 @@ module.exports = exports = function(server){
 
     // Supplier
     server.get('/api/supplier/', Middleware.checkToken, SupplierController.GetAllHandler);
+    server.get('/api/supplier/:id', Middleware.checkToken, SupplierController.GetDetailBySupplierIDHandler);
 
     // Product
     server.get('/api/product/', Middleware.checkToken, ProductController.GetAllHandler);
