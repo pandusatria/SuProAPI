@@ -14,6 +14,18 @@ const SupplierController = {
 
         global.dbo.collection('Suppliers').aggregate([
             {
+                  $lookup :
+                  {
+                        "localField" : "ContactNameTitleId", 
+                    "from" : "Titles", 
+                    "foreignField" : "_id", 
+                    "as" : "SuppliersTitle"
+                  }
+            },
+            { 
+                $unwind : "$SuppliersTitle"
+            },
+            {
                 $match:
                 {
                     "IsDelete": false
@@ -39,7 +51,9 @@ const SupplierController = {
                     "UpdateDate" : "$UpdateDate",
                     "UpdateBy" : "$UpdateBy",
                     "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
-                    "Code" : "$Code"
+                    "Code" : "$Code",
+                    "ContactNameTitleId" : "$ContactNameTitleId",
+                    "ContactNameTitle" : "$SuppliersTitle.Name"
                 }
             }
         ]).toArray((err, data) => {
@@ -61,9 +75,20 @@ const SupplierController = {
 
         global.dbo.collection('Suppliers').aggregate([
             {
+                $lookup :
+                {
+                    "localField" : "ContactNameTitleId",
+                    "from" : "Titles",
+                    "foreignField" : "_id",
+                    "as" : "SuppliersTitle"
+                }
+            },
+            {
+                $unwind : "$SuppliersTitle"
+            },
+            {
                 $match:
                 {
-                    "_id" : ObjectID(id),
                     "IsDelete": false
                 }
             },
@@ -85,7 +110,11 @@ const SupplierController = {
                     "CreatedDate" : "$CreatedDate",
                     "CreatedBy" : "$CreatedBy",
                     "UpdateDate" : "$UpdateDate",
-                    "UpdateBy" : "$UpdateBy"
+                    "UpdateBy" : "$UpdateBy",
+                    "Code" : "$Code",
+                    "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
+                    "ContactNameTitleId" : "$ContactNameTitleId",
+                    "ContactNameTitle" : "$SuppliersTitle.Name"
                 }
             }
         ]).toArray((err, data) => {
@@ -110,6 +139,18 @@ const SupplierController = {
 
         global.dbo.collection('Suppliers').aggregate([
             {
+                $lookup :
+                {
+                    "localField" : "ContactNameTitleId",
+                    "from" : "Titles",
+                    "foreignField" : "_id",
+                    "as" : "SuppliersTitle"
+                }
+            },
+            {
+                $unwind : "$SuppliersTitle"
+            },
+            {
                 $match:
                 {
                     "IsDelete": false
@@ -134,8 +175,10 @@ const SupplierController = {
                     "CreatedBy" : "$CreatedBy",
                     "UpdateDate" : "$UpdateDate",
                     "UpdateBy" : "$UpdateBy",
+                    "Code" : "$Code",
                     "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
-                    "Code" : "$Code"
+                    "ContactNameTitleId" : "$ContactNameTitleId",
+                    "ContactNameTitle" : "$SuppliersTitle.Name"
                 }
             },
             {
