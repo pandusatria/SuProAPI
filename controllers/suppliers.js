@@ -38,7 +38,8 @@ const SupplierController = {
                     "CreatedBy" : "$CreatedBy",
                     "UpdateDate" : "$UpdateDate",
                     "UpdateBy" : "$UpdateBy",
-                    "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] }
+                    "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
+                    "Code" : "$Code"
                 }
             }
         ]).toArray((err, data) => {
@@ -102,6 +103,58 @@ const SupplierController = {
             logger.info("Supplier : GetAllHandler successfully" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
             logger.info({data : model}, "Supplier : GetAllHandler content");
             Response.send(res, 200, model);
+        });
+    },
+    GetAllHandlerSortByDescending : (req, res, next) => {
+        logger.info("Initialized Supplier : GetAllHandlerSortByDescending" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+
+        global.dbo.collection('Suppliers').aggregate([
+            {
+                $match:
+                {
+                    "IsDelete": false
+                }
+            },
+            {
+                $project:
+                {
+                    "_id" : "$_id",
+                    "CompanyName" : "$CompanyName",
+                    "ContactName" : "$ContactName",
+                    "ContactEmail" : "$ContactEmail",
+                    "ContactTitle" : "$ContactTitle",
+                    "Address" : "$Address",
+                    "City" : "$City",
+                    "PostalCode" : "$PostalCode",
+                    "Country" : "$Country",
+                    "Phone" : "$Phone",
+                    "Fax" : "$Fax",
+                    "IsDelete" : "$IsDelete",
+                    "CreatedDate" : "$CreatedDate",
+                    "CreatedBy" : "$CreatedBy",
+                    "UpdateDate" : "$UpdateDate",
+                    "UpdateBy" : "$UpdateBy",
+                    "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
+                    "Code" : "$Code"
+                }
+            },
+            {
+              $sort:{"_id":-1}
+            },
+            { 
+              $limit : 1 
+            },
+        ]).toArray((err, data) => {
+            if(err)
+            {
+                logger.info("Supplier : GetAllHandlerSortByDescending Error" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+                logger.error(err);
+                return next(new Error());
+            }
+
+            logger.info("Supplier : GetAllHandlerSortByDescending successfully" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+            logger.info({data : data}, "Supplier : GetAllHandlerSortByDescending content");
+            Response.send(res, 200, data);
         });
     }
 };
