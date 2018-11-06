@@ -46,10 +46,10 @@ const SupplierController = {
                     "Phone" : "$Phone",
                     "Fax" : "$Fax",
                     "IsDelete" : "$IsDelete",
-                    "CreatedDate" : "$CreatedDate",
+                    "CreatedDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$CreatedDate" } },
                     "CreatedBy" : "$CreatedBy",
                     "UpdateDate" : "$UpdateDate",
-                    "UpdateBy" : "$UpdateBy",
+                    "UpdateBy" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateBy" } },
                     "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
                     "Code" : "$Code",
                     "ContactNameTitleId" : "$ContactNameTitleId",
@@ -73,24 +73,77 @@ const SupplierController = {
         logger.info("Initialized Supplier : GetAllHandlerSearch" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
 
         let search = req.body;
+        console.log("Request");
         console.log(search.filter);
 
-        let match = '';
-
-        for(let i = 0; i < search.filter.length; i++)
+        var myMatch = {};
+        for (var i = 0; i < search.filter.length; i++) 
         {
-            if(i === search.filter.length - 1)
-            {
-                match += search.filter[i];
-            }
-            else
-            {
-                match += search.filter[i] + ",";
-            }
+            myMatch[search.filter[i].id] = search.filter[i].value;
         }
 
-        console.log(match);
-        // Response.send(res, 200, body);
+        console.log("My Match : ");
+        console.log(myMatch);
+
+
+        global.dbo.collection('Suppliers').aggregate([
+            {
+                  $lookup :
+                  {
+                    "localField" : "ContactNameTitleId", 
+                    "from" : "Titles", 
+                    "foreignField" : "_id", 
+                    "as" : "SuppliersTitle"
+                  }
+            },
+            {
+                $unwind : "$SuppliersTitle"
+            },
+            {
+                $project:
+                {
+                    "_id" : "$_id",
+                    "CompanyName" : "$CompanyName",
+                    "ContactName" : "$ContactName",
+                    "ContactEmail" : "$ContactEmail",
+                    "ContactTitle" : "$ContactTitle",
+                    "Address" : "$Address",
+                    "City" : "$City",
+                    "PostalCode" : "$PostalCode",
+                    "Country" : "$Country",
+                    "Phone" : "$Phone",
+                    "Fax" : "$Fax",
+                    "IsDelete" : "$IsDelete",
+                    "CreatedDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$CreatedDate" } },
+                    "CreatedBy" : "$CreatedBy",
+                    "UpdateDate" : "$UpdateDate",
+                    "UpdateBy" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateBy" } },
+                    "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
+                    "Code" : "$Code",
+                    "ContactNameTitleId" : "$ContactNameTitleId",
+                    "ContactNameTitle" : "$SuppliersTitle.Name"
+                }
+            },
+            {
+                $match: {
+                    $and:
+                    [
+                        myMatch
+                    ]
+                }
+            }
+        ]).toArray((err, data) => {
+            if(err)
+            {
+                logger.info("Supplier : GetAllHandlerSearch Error" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+                logger.error(err);
+                return next(new Error());
+            }
+
+            logger.info("Supplier : GetAllHandlerSearch successfully" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+            logger.info({data : data}, "Supplier : GetAllHandlerSearch content");
+            Response.send(res, 200, data);
+        });
     },
     GetDetailBySupplierIDHandler : (req, res, next) => {
         logger.info("Initialized Supplier : GetDetailBySupplierIDHandler" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
@@ -130,12 +183,12 @@ const SupplierController = {
                     "Phone" : "$Phone",
                     "Fax" : "$Fax",
                     "IsDelete" : "$IsDelete",
-                    "CreatedDate" : "$CreatedDate",
+                    "CreatedDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$CreatedDate" } },
                     "CreatedBy" : "$CreatedBy",
                     "UpdateDate" : "$UpdateDate",
-                    "UpdateBy" : "$UpdateBy",
-                    "Code" : "$Code",
+                    "UpdateBy" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateBy" } },
                     "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
+                    "Code" : "$Code",
                     "ContactNameTitleId" : "$ContactNameTitleId",
                     "ContactNameTitle" : "$SuppliersTitle.Name"
                 }
@@ -143,7 +196,7 @@ const SupplierController = {
         ]).toArray((err, data) => {
             if(err)
             {
-                logger.info("Supplier : GetAllHandler Error" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+                logger.info("Supplier : GetDetailBySupplierIDHandler Error" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
                 logger.error(err);
                 return next(new Error());
             }
@@ -152,8 +205,8 @@ const SupplierController = {
                 return new supplierModel(entity);
             });
 
-            logger.info("Supplier : GetAllHandler successfully" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
-            logger.info({data : model}, "Supplier : GetAllHandler content");
+            logger.info("Supplier : GetDetailBySupplierIDHandler successfully" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+            logger.info({data : model}, "Supplier : GetDetailBySupplierIDHandler content");
             Response.send(res, 200, model);
         });
     },
@@ -194,12 +247,12 @@ const SupplierController = {
                     "Phone" : "$Phone",
                     "Fax" : "$Fax",
                     "IsDelete" : "$IsDelete",
-                    "CreatedDate" : "$CreatedDate",
+                    "CreatedDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$CreatedDate" } },
                     "CreatedBy" : "$CreatedBy",
                     "UpdateDate" : "$UpdateDate",
-                    "UpdateBy" : "$UpdateBy",
-                    "Code" : "$Code",
+                    "UpdateBy" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateBy" } },
                     "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
+                    "Code" : "$Code",
                     "ContactNameTitleId" : "$ContactNameTitleId",
                     "ContactNameTitle" : "$SuppliersTitle.Name"
                 }
