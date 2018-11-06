@@ -165,7 +165,8 @@ const SupplierController = {
             {
                 $match:
                 {
-                    "IsDelete": false
+                    "IsDelete": false,
+                    "_id" : ObjectID(id)
                 }
             },
             {
@@ -201,13 +202,9 @@ const SupplierController = {
                 return next(new Error());
             }
 
-            let model = data.map((entity) => {
-                return new supplierModel(entity);
-            });
-
             logger.info("Supplier : GetDetailBySupplierIDHandler successfully" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
-            logger.info({data : model}, "Supplier : GetDetailBySupplierIDHandler content");
-            Response.send(res, 200, model);
+            logger.info({data : data}, "Supplier : GetDetailBySupplierIDHandler content");
+            Response.send(res, 200, data);
         });
     },
     GetAllHandlerSortByDescending : (req, res, next) => {
