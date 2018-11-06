@@ -69,8 +69,31 @@ const SupplierController = {
             Response.send(res, 200, data);
         });
     },
+    GetAllHandlerSearch : (req, res, next) => {
+        logger.info("Initialized Supplier : GetAllHandlerSearch" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+
+        let search = req.body;
+        console.log(search.filter);
+
+        let match = '';
+
+        for(let i = 0; i < search.filter.length; i++)
+        {
+            if(i === search.filter.length - 1)
+            {
+                match += search.filter[i];
+            }
+            else
+            {
+                match += search.filter[i] + ",";
+            }
+        }
+
+        console.log(match);
+        // Response.send(res, 200, body);
+    },
     GetDetailBySupplierIDHandler : (req, res, next) => {
-        logger.info("Initialized Supplier : GetAllHandler" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+        logger.info("Initialized Supplier : GetDetailBySupplierIDHandler" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
         let id = req.params.id;
 
         global.dbo.collection('Suppliers').aggregate([
@@ -197,6 +220,22 @@ const SupplierController = {
 
             logger.info("Supplier : GetAllHandlerSortByDescending successfully" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
             logger.info({data : data}, "Supplier : GetAllHandlerSortByDescending content");
+            Response.send(res, 200, data);
+        });
+    },
+    GetListContactTitleName : (req, res, next) => {
+        logger.info("Initialized Supplier : GetListContactTitleName" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+
+        global.dbo.collection('Titles').aggregate([]).toArray((err, data) => {
+            if(err)
+            {
+                logger.info("Supplier : GetListContactTitleName Error" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+                logger.error(err);
+                return next(new Error());
+            }
+
+            logger.info("Supplier : GetListContactTitleName successfully" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+            logger.info({data : data}, "Supplier : GetListContactTitleName content");
             Response.send(res, 200, data);
         });
     }

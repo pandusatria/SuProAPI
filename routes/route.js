@@ -19,7 +19,6 @@ module.exports = exports = function(server){
     });
 
     server.pre(cors.preflight);
-    server.use(cors.actual);
 
     logger.info("Restify Cors Middleware already set" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
     logger.info("Route already accessed" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
@@ -32,6 +31,8 @@ module.exports = exports = function(server){
     server.get('/api/supplier/', Middleware.checkToken, SupplierController.GetAllHandler);
     server.get('/api/supplier/:id', Middleware.checkToken, SupplierController.GetDetailBySupplierIDHandler);
     server.get('/api/supplier/orderdesc', Middleware.checkToken, SupplierController.GetAllHandlerSortByDescending);
+    server.get('/api/supplier/gettitle', Middleware.checkToken, SupplierController.GetListContactTitleName);
+    server.post('/api/supplier/search', Middleware.checkToken, SupplierController.GetAllHandlerSearch);
 
     // Product
     server.get('/api/product/', Middleware.checkToken, ProductController.GetAllHandler);
