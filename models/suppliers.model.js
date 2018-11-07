@@ -18,6 +18,8 @@ function model (entity)
     this.CreatedBy      =   entity.CreatedBy;
     this.UpdateDate     =   entity.UpdateDate;
     this.UpdateBy       =   entity.UpdateBy;
+    this.Code           =   entity.Code;
+    this.ContactNameTitleId = entity.ContactNameTitleId;
 }
 
 model.prototype.getData = function()
@@ -38,7 +40,9 @@ model.prototype.getData = function()
         CreatedDate  :   this.CreatedDate,
         CreatedBy    :   this.CreatedBy,
         UpdateDate   :   this.UpdateDate,
-        UpdateBy     :   this.UpdateBy
+        UpdateBy     :   this.UpdateBy,
+        Code         :   this.Code,
+        ContactNameTitleId : this.ContactNameTitleId
     };
 };
 

@@ -288,6 +288,46 @@ const SupplierController = {
             logger.info({data : data}, "Supplier : GetListContactTitleName content");
             Response.send(res, 200, data);
         });
+    },
+    CreateNewSupplierHandler : (req, res, next) => {
+        let reqdata = req.body;
+        var data = {};
+
+        data.CompanyName = reqdata.CompanyName;
+        data.ContactName = reqdata.ContactName;
+        data.ContactEmail = reqdata.ContactEmail;
+        data.ContactTitle = reqdata.ContactTitle;
+        data.Address = reqdata.Address;
+        data.City = reqdata.City;
+        data.PostalCode = reqdata.PostalCode;
+        data.Country = reqdata.Country;
+        data.Phone = reqdata.Phone;
+        data.Fax = reqdata.Fax;
+        data.Code = reqdata.Code;
+        data.ContactNameTitleId = ObjectID(reqdata.ContactNameTitleId);
+
+        data.CreatedDate = now;
+        data.CreatedBy = global.user.UserName;
+        data.UpdateDate = null;
+        data.UpdateBy = null;
+        data.IsDelete = false;
+
+        var model = new supplierModel(data);
+
+        console.log("Data : ");
+        console.log(data);
+
+        console.log("Model : ");
+        console.log(model);
+
+        global.dbo.collection('Suppliers').insertOne(model, function(err, data){
+            if(err)
+            {
+                return next(new Error());
+            }
+
+            Response.send(res, 200, data);
+        });
     }
 };
 

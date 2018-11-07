@@ -33,6 +33,7 @@ module.exports = exports = function(server){
     server.get('/api/supplier/orderdesc', Middleware.checkToken, SupplierController.GetAllHandlerSortByDescending);
     server.get('/api/supplier/gettitle', Middleware.checkToken, SupplierController.GetListContactTitleName);
     server.post('/api/supplier/search', Middleware.checkToken, SupplierController.GetAllHandlerSearch);
+    server.post('/api/supplier/', Middleware.checkToken, SupplierController.CreateNewSupplierHandler);
 
     // Product
     server.get('/api/product/', Middleware.checkToken, ProductController.GetAllHandler);
