@@ -255,10 +255,10 @@ const SupplierController = {
                 }
             },
             {
-              $sort:{"_id":-1}
+                $sort:{"_id":-1}
             },
-            { 
-              $limit : 1 
+            {
+                $limit : 1
             },
         ]).toArray((err, data) => {
             if(err)
@@ -286,6 +286,65 @@ const SupplierController = {
 
             logger.info("Supplier : GetListContactTitleName successfully" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
             logger.info({data : data}, "Supplier : GetListContactTitleName content");
+            Response.send(res, 200, data);
+        });
+    },
+    GetProductBySupplierID : (req, res, next) => {
+        logger.info("Initialized Supplier : GetProductBySupplierID" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+        let id = req.params.id;
+
+        global.dbo.collection('Suppliers').aggregate([
+            {
+                $lookup:
+                {
+                    from: 'Products',
+                    localField: '_id',
+                    foreignField: 'SupplierID',
+                    as: 'Suppliers_Products'
+                }
+            },
+            {
+                $match:
+                {
+                    "IsDelete": false,
+                    "_id" : ObjectID(id)
+                }
+            },
+            {
+                  $project:
+                  {
+                      "_id" : "$_id",
+                    "CompanyName" : "$CompanyName",
+                    "ContactName" : "$ContactName",
+                    "ContactEmail" : "$ContactEmail",
+                    "ContactTitle" : "$ContactTitle",
+                    "Address" : "$Address",
+                    "City" : "$City",
+                    "PostalCode" : "$PostalCode",
+                    "Country" : "$Country",
+                    "Phone" : "$Phone",
+                    "Fax" : "$Fax",
+                    "IsDelete" : "$IsDelete",
+                    "CreatedDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$CreatedDate" } },
+                    "CreatedBy" : "$CreatedBy",
+                    "UpdateDate" : "$UpdateDate",
+                    "UpdateBy" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateBy" } },
+                    "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
+                    "Code" : "$Code",
+                    "ContactNameTitleId" : "$ContactNameTitleId",
+                    "DetailProduct" : "$Suppliers_Products"
+                }
+            }
+        ]).toArray((err, data) => {
+            if(err)
+            {
+                logger.info("Supplier : GetProductBySupplierID Error" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+                logger.error(err);
+                return next(new Error());
+            }
+
+            logger.info("Supplier : GetProductBySupplierID successfully" + " at " + moment().format('DD/MM/YYYY, hh:mm:ss a'));
+            logger.info({data : data}, "Supplier : GetProductBySupplierID content");
             Response.send(res, 200, data);
         });
     },

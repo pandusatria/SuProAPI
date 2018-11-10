@@ -34,6 +34,7 @@ module.exports = exports = function(server){
     server.get('/api/supplier/gettitle', Middleware.checkToken, SupplierController.GetListContactTitleName);
     server.post('/api/supplier/search', Middleware.checkToken, SupplierController.GetAllHandlerSearch);
     server.post('/api/supplier/', Middleware.checkToken, SupplierController.CreateNewSupplierHandler);
+    server.get('/api/supplier/getsupplierproduct/:id', Middleware.checkToken, SupplierController.GetProductBySupplierID);
 
     // Product
     server.get('/api/product/', Middleware.checkToken, ProductController.GetAllHandler);
