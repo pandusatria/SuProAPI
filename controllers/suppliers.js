@@ -5,6 +5,7 @@ const ObjectID = require('mongodb').ObjectID;
 const moment = require('moment');
 const logger = require('../config/log');
 const supplierModel = require('../models/suppliers.model');
+const productModel = require('../models/products.model');
 
 var now = new Date();
 
@@ -22,7 +23,7 @@ const SupplierController = {
                     "as" : "SuppliersTitle"
                   }
             },
-            { 
+            {
                 $unwind : "$SuppliersTitle"
             },
             {
@@ -48,8 +49,8 @@ const SupplierController = {
                     "IsDelete" : "$IsDelete",
                     "CreatedDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$CreatedDate" } },
                     "CreatedBy" : "$CreatedBy",
-                    "UpdateDate" : "$UpdateDate",
-                    "UpdateBy" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateBy" } },
+                    "UpdateDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateDate" } },
+                    "UpdateBy" : "$UpdateBy",
                     "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
                     "Code" : "$Code",
                     "ContactNameTitleId" : "$ContactNameTitleId",
@@ -116,8 +117,8 @@ const SupplierController = {
                     "IsDelete" : "$IsDelete",
                     "CreatedDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$CreatedDate" } },
                     "CreatedBy" : "$CreatedBy",
-                    "UpdateDate" : "$UpdateDate",
-                    "UpdateBy" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateBy" } },
+                    "UpdateDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateDate" } },
+                    "UpdateBy" : "$UpdateBy",
                     "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
                     "Code" : "$Code",
                     "ContactNameTitleId" : "$ContactNameTitleId",
@@ -186,8 +187,8 @@ const SupplierController = {
                     "IsDelete" : "$IsDelete",
                     "CreatedDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$CreatedDate" } },
                     "CreatedBy" : "$CreatedBy",
-                    "UpdateDate" : "$UpdateDate",
-                    "UpdateBy" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateBy" } },
+                    "UpdateDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateDate" } },
+                    "UpdateBy" : "$UpdateBy",
                     "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
                     "Code" : "$Code",
                     "ContactNameTitleId" : "$ContactNameTitleId",
@@ -246,8 +247,8 @@ const SupplierController = {
                     "IsDelete" : "$IsDelete",
                     "CreatedDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$CreatedDate" } },
                     "CreatedBy" : "$CreatedBy",
-                    "UpdateDate" : "$UpdateDate",
-                    "UpdateBy" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateBy" } },
+                    "UpdateDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateDate" } },
+                    "UpdateBy" : "$UpdateBy",
                     "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
                     "Code" : "$Code",
                     "ContactNameTitleId" : "$ContactNameTitleId",
@@ -327,8 +328,8 @@ const SupplierController = {
                     "IsDelete" : "$IsDelete",
                     "CreatedDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$CreatedDate" } },
                     "CreatedBy" : "$CreatedBy",
-                    "UpdateDate" : "$UpdateDate",
-                    "UpdateBy" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateBy" } },
+                    "UpdateDate" : { "$dateToString": { "format": "%Y-%m-%d", "date": "$UpdateDate" } },
+                    "UpdateBy" : "$UpdateBy",
                     "FullAddress" : { $concat: [ "$Address", " ", "$City", " ", "$PostalCode", " ", "$Country" ] },
                     "Code" : "$Code",
                     "ContactNameTitleId" : "$ContactNameTitleId",
@@ -386,6 +387,129 @@ const SupplierController = {
             }
 
             Response.send(res, 200, data);
+        });
+    },
+    EditSupplierProductHandler : (req, res, next) => {
+        let id = req.params.id;
+        let reqdata = req.body;
+        var updatemodel = {};
+        var ListProduct = [];
+        var oldmodel = {};
+
+        console.log("ID Supplier : ");
+        console.log(id);
+
+        ListProduct = reqdata.DetailProduct;
+
+        console.log("List Product : ");
+        console.log(ListProduct);
+
+        global.dbo.collection('Suppliers').find({IsDelete : false, '_id' : ObjectID(id)}).toArray((err, data) => {
+            if(err)
+            {
+                return next(new Error());
+            }
+
+            oldmodel = data.map((entity) => {
+                return new supplierModel(entity);
+            });
+
+            console.log("Old Model : ");
+            console.log(oldmodel);
+
+            updatemodel._id = ObjectID(id);
+
+            updatemodel.CompanyName = reqdata.CompanyName;
+            updatemodel.ContactName = reqdata.ContactName;
+            updatemodel.ContactEmail = reqdata.ContactEmail;
+            updatemodel.ContactTitle = reqdata.ContactTitle;
+            updatemodel.Address = reqdata.Address;
+            updatemodel.City = reqdata.City;
+            updatemodel.PostalCode = reqdata.PostalCode;
+            updatemodel.Country = reqdata.Country;
+            updatemodel.Phone = reqdata.Phone;
+            updatemodel.Fax = reqdata.Fax;
+            updatemodel.Code = reqdata.Code;
+            updatemodel.ContactNameTitleId = ObjectID(reqdata.ContactNameTitleId);
+
+            updatemodel.CreatedDate = oldmodel[0].CreatedDate;
+            updatemodel.CreatedBy = oldmodel[0].CreatedBy;
+            updatemodel.UpdateDate = now;
+            updatemodel.UpdateBy =  global.user.UserName;
+            updatemodel.IsDelete = false;
+
+            console.log("Update Model : ");
+            console.log(updatemodel);
+
+            var model = new supplierModel(updatemodel);
+
+            console.log("Model : ");
+            console.log(model);
+
+            // First Update Supplier
+            console.log("First : Update Supplier");
+            global.dbo.collection('Suppliers').findOneAndUpdate
+            (
+                {'_id' : ObjectID(id)},
+                {$set: model},
+                function(err, data){
+                    if(err)
+                    {
+                        return next(new Error());
+                    }
+
+                    // Second Delete Detail Product By Supplier ID
+                    console.log("Second : Delete Detail Product By Supplier ID");
+                    global.dbo.collection('Products').deleteMany
+                    (
+                        {'SupplierID' : ObjectID(id)},
+                        function(err, data){
+                            if(err)
+                            {
+                                return next(new Error());
+                            }
+
+                            // Third Insert All Product from List Product
+                            var ListProductModel = [];
+
+                            console.log("List Product to Mapping");
+                            console.log(ListProduct);
+
+                            for (var counter=0; counter < ListProduct.length; counter++){
+                                    var modelInsert = {};
+
+                                    modelInsert.ProductName     =   ListProduct[counter].ProductName;
+                                    modelInsert.SupplierID      =   ObjectID(id);
+                                    modelInsert.CategoryName    =   ListProduct[counter].CategoryName;
+                                    modelInsert.QuantityPerUnit =   ListProduct[counter].QuantityPerUnit;
+                                    modelInsert.UnitPrice       =   ListProduct[counter].UnitPrice;
+                                    modelInsert.UnitInStock     =   ListProduct[counter].UnitInStock;
+
+                                    modelInsert.IsDelete        =   false;
+                                    modelInsert.CreatedDate     =   now;
+                                    modelInsert.CreatedBy       =   global.user.UserName;
+                                    modelInsert.UpdateDate      =   null;
+                                    modelInsert.UpdateBy        =   null;
+
+                                    var model = new productModel(modelInsert);
+                                    ListProductModel.push(model);
+                            }
+
+                            console.log("List Model to Add in Database");
+                            console.log(ListProductModel);
+
+                            global.dbo.collection('Products').insertMany(ListProductModel, function(err, data){
+                                if(err)
+                                {
+                                    return next(new Error());
+                                }
+
+                                Response.send(res, 200, data);
+                            });
+                        }
+                    );
+                }
+            );
         });
     }
 };
